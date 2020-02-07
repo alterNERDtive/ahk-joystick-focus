@@ -96,7 +96,6 @@ return
 watchTarget:
   if (WinExist("ahk_exe " config["target"]["name"])) {
     ; start stick watcher
-    rate := config["polling"]["pollingrate"]
     SetTimer, watchSticks, % config["polling"]["pollingrate"]
     ; start tools
     for ip, path in config["tools"]["paths"] {
