@@ -25,6 +25,12 @@ setWorkingDir %A_ScriptDir%
 
 #Persistent
 
+; check for config file and exit if it doesn’t exist
+if !FileExist("focus.ini") {
+  msgbox, No config file found. Please follow the instructions in the README file.
+  ExitApp, 1
+}
+
 ; read focus.ini
 config := readConfig("focus.ini")
 
