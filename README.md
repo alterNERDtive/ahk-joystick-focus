@@ -123,13 +123,12 @@ stay open, just set this to `False`.
 
 ## Need Help / Want to Contribute? ##
 
-If you run into any errors, please try running the profile in question on its 
-own / get a fresh version. If that doesn’t fix the error, look at the 
+If you run into any errors, please look at the 
 [devel](https://github.com/alterNERDtive/ahk-joystick-focus/tree/devel) branch 
 and see if it’s fixed there already.
 
-If you have no idea what I was saying in that last parargraph and / or the 
-things mentioned there don’t fix your problem, please [file an 
+If you have no idea what I was saying in that last parargraph and / or it 
+doesn’t fix your problem, please [file an 
 issue](https://github.com/alterNERDtive/ahk-joystick-focus/issues). Thanks! :)
 
 You can also [say “Hi” on Discord](https://discord.gg/mD6dAb) if that is your 
