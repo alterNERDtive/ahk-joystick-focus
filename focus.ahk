@@ -9,8 +9,8 @@
 ; detected and (optional, default on) close them again when the
 ; target is gone.
 ;
-; Make sure your % file file is setup properly. If not you might
-; have to go kill the script from Task Manager :)
+; Make sure your focus.ini file is setup properly. If not you might
+; have to go kill the script from the systray or Task Manager :)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 #NoEnv
@@ -55,29 +55,39 @@ readConfig(file) {
   names := []
   error := False
   while (!error) {
-    IniRead, tmp, % file, devices, name%A_Index%
+    IniRead, tmp, % file, devices, device%A_Index%
     if (tmp == "ERROR")
       error := True
     else
       names.push(tmp)
   }
+  devcount := names.MaxIndex()
   senses := []
-  error := False
-  while (!error) {
-    IniRead, tmp, % file, devices, sensitivity%A_Index%
+  useAxes := []
+  useButtons := []
+  loop, %devcount%
+  {
+    IniRead, tmp, % file, devices, device%A_Index%sensitivity
     if (tmp == "ERROR")
-      error := True
-    else
-      senses.push(tmp)
+      tmp := 1
+    senses.push(tmp)
+    IniRead, tmp, % file, devices, device%A_Index%useAxes
+    if (tmp == "ERROR")
+      tmp := True
+    useAxes.push(tmp)
+    IniRead, tmp, % file, devices, device%A_Index%useButtons
+    if (tmp == "ERROR")
+      tmp := True
+    useButtons.push(tmp)
   }
-  config["devices"] := {"threshold": thold, "names": names, "sensitivities": senses}
+  config["devices"] := {"threshold": thold, "names": names, "sensitivities": senses, "useAxes": useAxes, "UseButtons": useButtons}
 
   ; [tools]
   IniRead, tkill, % file, tools, kill
   paths := []
   error := False
   while (!error) {
-    IniRead, tmp, % file, tools, path%A_Index%
+    IniRead, tmp, % file, tools, tool%A_Index%
     if (tmp == "ERROR")
       error := True
     else
@@ -132,27 +142,33 @@ watchSticks:
   target := "ahk_exe " config["target"]["name"]
   ; poll all axes
   for id, dev in config["devices"]["names"] {
-    for ia, axis in [ "X", "Y" ] {
-      ; axes are 0-100
-      ; -50 means we get a deviation from "0" aka resting state
-      ; abs() since we don’t care which direction you push the thing
-      if (abs(getKeyState(dev axis) - 50)
-            * config["devices"]["sensitivities"][id]
-          > config["devices"]["threshold"]) {
-        ; focus the target!
-        WinActivate, % target
+    ; check if axes are enabled for this device
+    if config["devices"]["useAxes"][id] = True {
+      for ia, axis in [ "X", "Y" ] {
+        ; axes are 0-100
+        ; -50 means we get a deviation from "0" aka resting state
+        ; abs() since we don’t care which direction you push the thing
+        if (abs(getKeyState(dev axis) - 50)
+              * config["devices"]["sensitivities"][id]
+            > config["devices"]["threshold"]) {
+          ; focus the target!
+          WinActivate, % target
+        }
       }
     }
   }
   ; check ALL THE BUTTONS!
   for id, dev in config["devices"]["names"] {
-    ; get button count for the device and loop over all of them
-    buttons := getKeystate(dev "Buttons")
-    Loop, %buttons%
-    {
-      if (getKeyState(dev A_Index)) {
-        ; focus the target!
-        WinActivate, % target
+    ; check if buttons are enabled for this device
+    if config["devices"]["useButtons"][id] = True {
+      ; get button count for the device and loop over all of them
+      buttons := getKeystate(dev "Buttons")
+      Loop, %buttons%
+      {
+        if (getKeyState(dev A_Index)) {
+          ; focus the target!
+          WinActivate, % target
+        }
       }
     }
   }

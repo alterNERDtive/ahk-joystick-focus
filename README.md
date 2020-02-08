@@ -67,27 +67,32 @@ If you feel like 100 ms are too slow, set a delay that’s smaller.
 
 ```
 [devices]
-name1="2Joy"
-name2="4Joy"
-sensitivity1=10
-sensitivity2=1
+device1="2Joy"
+device2="4Joy"
+device1sensitivity=10
+device5useaxes=False
+device6usebuttons=False
 threshold=5
 ```
 
 In this section of the config file you are defining the devices the script 
 should be monitoring.
 
-`name1` through `nameX` are the names in AHK terms, with `Joy` or `1Joy` being 
-the first in the list. You’ll probably have to go through them in sequence to 
-find out which physical device is which number. The ordering MIGHT change after 
-you reboot the system but has been consistent for me so far. It should 
-definitely change if you reboot with one of the devices unplugged.
+`device1` through `deviceX` are the device names in AHK terms, with `Joy` or 
+`1Joy` being the first in the list. You’ll probably have to go through them in 
+sequence to find out which physical device is which number. The ordering MIGHT 
+change after you reboot the system but has been consistent for me so far. It 
+should definitely change if you reboot with one of the devices unplugged.
 
-`sensitivity1` through `sensitivityX` is a multiplier used for the axis inputs 
-of the device with the same number as above. If you do not have set any curves 
-for your device(s), you should probably leave this at `1` for all of them. 
-Personally I have a very non-aggressive curve on my right stick, so that ones 
-multiplier is cranked all the way up to `10`.
+`deviceXsensitivity` is an (optional) multiplier used for the axis inputs of the 
+device with the same number as above. If you do not have set any curves for your 
+device(s), you should probably leave this at `1` for all of them (or just don’t 
+put a setting into your config). Personally I have a very non-aggressive curve 
+on my right stick, so that ones multiplier is cranked all the way up to `10`.
+
+Similarly, `deviceXuseaxes` and `deviceXuseButtons` can be set to `False` to 
+disable monitoring of certain devices’ axes or buttons. If you leave this out, 
+it is assumed `True`.
 
 Last but not least, `threshold` will be the intensity of input needed on an axis 
 to trigger the script to focus your application. `5` means a 10% movement up or 
@@ -99,14 +104,14 @@ not to produce ghost inputs, you might have to increase this.
 
 ```
 [tools]
-path1="C:\Program Files (x86)\EDMarketConnector\EDMarketConnector.exe"
-path2="D:\Tools\SSChanger\SSChanger.exe"
+tool1="C:\Program Files (x86)\EDMarketConnector\EDMarketConnector.exe"
+tool2="D:\Tools\SSChanger\SSChanger.exe"
 kill=True
 ```
 
 Here you can set tools the script should run alongside your application.
 
-`path1` to `pathX` has to be set to the full paths of the tools.
+`tool1` to `toolX` has to be set to the full paths of the tools’ executables.
 
 `kill` is a boolean (`True`/`False`) to tell the script whether to kill the 
 tools again after your target application has shut down. If you want them to 
