@@ -90,7 +90,7 @@ device(s), you should probably leave this at `1` for all of them (or just don’
 put a setting into your config). Personally I have a very non-aggressive curve 
 on my right stick, so that ones multiplier is cranked all the way up to `10`.
 
-Similarly, `deviceXuseaxes` and `deviceXuseButtons` can be set to `False` to 
+Similarly, `deviceXuseaxes` and `deviceXusebuttons` can be set to `False` to 
 disable monitoring of certain devices’ axes or buttons. If you leave this out, 
 it is assumed `True`.
 
