@@ -26,7 +26,7 @@ setWorkingDir %A_ScriptDir%
 #Persistent
 
 ; check for config file and exit if it doesn’t exist
-if !FileExist("focus.ini") {
+if (!FileExist("focus.ini")) {
   msgbox, No config file found. Please follow the instructions in the README file.
   ExitApp, 1
 }
@@ -43,7 +43,7 @@ readConfig(file) {
 
   ; [target]
   IniRead, tname, % file, target, name
-  config["target"] := {"name": tname}
+  config["target","name"] := tname
 
   ; [polling]
   IniRead, prate, % file, polling, pollingrate
@@ -74,13 +74,17 @@ readConfig(file) {
     IniRead, tmp, % file, devices, device%A_Index%useAxes
     if (tmp == "ERROR")
       tmp := True
+    else
+      tmp := %tmp%
     useAxes.push(tmp)
     IniRead, tmp, % file, devices, device%A_Index%useButtons
     if (tmp == "ERROR")
       tmp := True
+    else
+      tmp := %tmp%
     useButtons.push(tmp)
   }
-  config["devices"] := {"threshold": thold, "names": names, "sensitivities": senses, "useAxes": useAxes, "UseButtons": useButtons}
+  config["devices"] := {"threshold": thold, "names": names, "sensitivities": senses, "useAxes": useAxes, "useButtons": useButtons}
 
   ; [tools]
   IniRead, tkill, % file, tools, kill
@@ -93,7 +97,7 @@ readConfig(file) {
     else
       paths.push(tmp)
   }
-  config["tools"] := {"kill": tkill, "paths": paths}
+  config["tools"] := {"kill": %tkill%, "paths": paths}
 
   return config
 }
@@ -129,7 +133,7 @@ watchTarget:
       for ip, path in config["tools"]["paths"] {
         SplitPath, path, file
         if (WinExist("ahk_exe " file)) {
-          Process, Close, % file
+          WinClose
         }
       }
     }
@@ -143,7 +147,7 @@ watchSticks:
   ; poll all axes
   for id, dev in config["devices"]["names"] {
     ; check if axes are enabled for this device
-    if config["devices"]["useAxes"][id] = True {
+    if (config["devices"]["useAxes"][id]) {
       for ia, axis in [ "X", "Y" ] {
         ; axes are 0-100
         ; -50 means we get a deviation from "0" aka resting state
@@ -160,7 +164,7 @@ watchSticks:
   ; check ALL THE BUTTONS!
   for id, dev in config["devices"]["names"] {
     ; check if buttons are enabled for this device
-    if config["devices"]["useButtons"][id] = True {
+    if (config["devices"]["useButtons"][id]) {
       ; get button count for the device and loop over all of them
       buttons := getKeystate(dev "Buttons")
       Loop, %buttons%
