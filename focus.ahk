@@ -133,7 +133,7 @@ watchTarget:
       for ip, path in config["tools"]["paths"] {
         SplitPath, path, file
         if (WinExist("ahk_exe " file)) {
-          Process, Close, % file
+          WinClose
         }
       }
     }
