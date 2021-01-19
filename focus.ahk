@@ -2,7 +2,7 @@
 ; This script will raise / focus a target application when you move
 ; your Joystick/Throttle/Gamepad/whatever axes or hit a button.
 ;
-; I’m using it with twin sticks for Elite Dangerous, but it should be
+; Iâ€™m using it with twin sticks for Elite Dangerous, but it should be
 ; generically usable.
 ;
 ; It will also start a list of tools if the target application is
@@ -25,7 +25,7 @@ setWorkingDir %A_ScriptDir%
 
 #Persistent
 
-; check for config file and exit if it doesn’t exist
+; check for config file and exit if it doesnâ€™t exist
 if (!FileExist("focus.ini")) {
   msgbox, No config file found. Please follow the instructions in the README file.
   ExitApp, 1
@@ -33,6 +33,7 @@ if (!FileExist("focus.ini")) {
 
 ; read focus.ini
 config := readConfig("focus.ini")
+state := {}
 
 ; set the target watcher
 SetTimer, watchTarget, % config["polling"]["targetcheckrate"]
@@ -102,8 +103,8 @@ readConfig(file) {
   return config
 }
 
-; nothing but jump labels beyond this point, let’s make it explicit
-; (AHK v2 will finally get rid of those …)
+; nothing but jump labels beyond this point, letâ€™s make it explicit
+; (AHK v2 will finally get rid of those â€¦)
 return
 
 ; this one will check for a running target process
@@ -114,6 +115,10 @@ return
 ; 1. stop the stick watching routine
 ; 2. (optional) stop ALL THE TOOLS
 watchTarget:
+  watchTarget()
+return
+watchTarget() {
+  global config
   if (WinExist("ahk_exe " config["target"]["name"])) {
     ; start stick watcher
     SetTimer, watchSticks, % config["polling"]["pollingrate"]
@@ -138,26 +143,28 @@ watchTarget:
       }
     }
   }
-return
+}
 
 ; this one will check the sticks for input on the X/Y axes or buttons
 ; if an axis is currently active or a button down, focuses the target program
 watchSticks:
+  watchSticks()
+return
+watchSticks() {
+  global config, state
   target := "ahk_exe " config["target"]["name"]
   ; poll all axes
   for id, dev in config["devices"]["names"] {
     ; check if axes are enabled for this device
     if (config["devices"]["useAxes"][id]) {
-      for ia, axis in [ "X", "Y" ] {
-        ; axes are 0-100
-        ; -50 means we get a deviation from "0" aka resting state
-        ; abs() since we don’t care which direction you push the thing
-        if (abs(getKeyState(dev axis) - 50)
-              * config["devices"]["sensitivities"][id]
+      for ia, axis in [ "X", "Y", "Z", "R", "U", "V" ] {
+        if (abs(getKeyState(dev axis) - state[id][axis])
+            * config["devices"]["sensitivities"][id]
             > config["devices"]["threshold"]) {
           ; focus the target!
           WinActivate, % target
         }
+        state[id, axis] := getKeyState(dev axis)
       }
     }
   }
@@ -176,4 +183,4 @@ watchSticks:
       }
     }
   }
-return
+}
