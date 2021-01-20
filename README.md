@@ -14,7 +14,7 @@ randomly and silently crashing on me, defeating its purpose.
 * starts tools you need with the application when it’s up
 * (optional) kills the tools again when it’s down
 * when it’s up, watches configured devices for input and focuses the application 
-  if you move the X/Y axis or hit a button
+  if you move any of the axes or hit a button
 
 ## Requirements
 
