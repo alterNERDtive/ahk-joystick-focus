@@ -1,6 +1,6 @@
 # v0.2.0 (2021-01-20)
 
-This release adds proper support for devices beyond just Joysticks, e.g.  
+This release adds proper support for devices beyond just Joysticks, e.g. 
 physical throttle units.
 
 ## Changed
