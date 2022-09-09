@@ -1,3 +1,13 @@
+# devel
+
+## Changed
+
+* Now watches for a _process_ instead of a _window_ for checking if a tool is
+  already up. This means stuff isn’t started multiple times if the window takes
+  a while to pop up.
+
+-----
+
 # v0.2.0 (2021-01-20)
 
 This release adds proper support for devices beyond just Joysticks, e.g. 

@@ -125,7 +125,8 @@ watchTarget() {
     ; start tools
     for ip, path in config["tools"]["paths"] {
       SplitPath, path, file
-      if (!WinExist("ahk_exe " file)) {
+      Process, Exist, %file%
+      if (!ErrorLevel) {
         Run, % path
       }
     }
